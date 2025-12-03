@@ -13,8 +13,8 @@ O fluxo é dividido em dois ambientes:
 | **Comunicação** | **Endpoint** | **Uso** | 
 | :--- | :--- | :--- |
 | **GET** | `/api/v1/setpoint/<id_incubadora>/` | ESP32 busca o setpoint configurado remotamente. | 
-| **POST** | `/api/v1/historico/` | ESP32 envia dados de telemetria e estado (funciona de forma assíncrona para evitar travamento). | 
-| **GET** | `/api/v1/historico/<id_incubadora>/` | Dashboard/Web busca o histórico de uma unidade específica. | 
+| **POST** | `/api/v1/historico/` | ESP32 envia dados de telemetria e estado. | 
+| **GET** | `/api/v1/historico/<id_incubadora>/` | Busca o histórico de uma unidade específica. | 
 
 ## 💻 Configuração do Backend (Django no PythonAnywhere)
 
@@ -69,5 +69,6 @@ O circuito simulado no Wokwi deve incluir:
 
 No `incubadora_pid.ino`, configure o `BASE_URL` para o seu domínio ativo e o nome (ID) da incubadora.
  
+
 
 
