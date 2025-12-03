@@ -59,7 +59,7 @@ O circuito simulado no Wokwi deve incluir:
 
 | **Componente** | **Função** | 
 | :--- | :--- |
-| **ESP32 Dev Module** | Microcontrolador principal | 
+| **ESP32** | Microcontrolador principal | 
 | **Sensor (DS18B20)** | Leitura de temperatura inicial (depois, simulação) | 
 | **Buzzer** | Alerta de Tampa Aberta | 
 | **LIGA/DESLIGA** | Switch de Parada Imediata | 
@@ -69,6 +69,7 @@ O circuito simulado no Wokwi deve incluir:
 
 No `incubadora_pid.ino`, configure o `BASE_URL` para o seu domínio ativo e o nome (ID) da incubadora.
  
+
 
 
 
