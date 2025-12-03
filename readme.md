@@ -8,7 +8,7 @@ O fluxo é dividido em dois ambientes:
 
 1.  **Backend (Django):** Hospeda a API REST, armazena o histórico de telemetria e permite a configuração remota do *setpoint*.
 
-2.  **Frontend/Hardware (ESP32 - Wokwi):** Executa o **Controlador PID local** em tempo real, monitora sensores e botões, e lida com a lógica de estados (Modo Automático, Manual e Alerta).
+2.  **ESP32 - Wokwi:** Executa o **Controlador PID local** em tempo real, monitora sensores e botões, e lida com a lógica de estados (Modo Automático, Manual e Alerta).
 
 | **Comunicação** | **Endpoint** | **Uso** | 
 | :--- | :--- | :--- |
@@ -69,4 +69,5 @@ O circuito simulado no Wokwi deve incluir:
 
 No `incubadora_pid.ino`, configure o `BASE_URL` para o seu domínio ativo e o nome (ID) da incubadora.
  
+
 
