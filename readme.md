@@ -69,9 +69,10 @@ O circuito simulado no Wokwi deve incluir:
 
 No `incubadora_pid.ino`, configure o `BASE_URL` para o seu domínio ativo e o nome (ID) da incubadora.
 
-### 3. Configuração no Código
+### 3. Projeto do circuito
 
 Projeto: https://wokwi.com/projects/448975964990308353
+
 
 
 
