@@ -64,6 +64,7 @@ O circuito simulado no Wokwi deve incluir:
 | **Buzzer** | Alerta de Tampa Aberta | 
 | **LIGA/DESLIGA** | Switch de Parada Imediata | 
 | **Tampa** | Switch de Segurança (Alerta) | 
+| **Modo** | Switch de modo Manul/Automático | 
 
 ### 2. Configuração no Código
 
@@ -72,6 +73,7 @@ No `incubadora_pid.ino`, configure o `BASE_URL` para o seu domínio ativo e o no
 ### 3. Projeto do circuito
 
 Projeto: https://wokwi.com/projects/448975964990308353
+
 
 
 
