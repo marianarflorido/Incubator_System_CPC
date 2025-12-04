@@ -12,7 +12,7 @@ const char* BASE_URL = "https://marianarobaina.pythonanywhere.com";
 
 const String API_PREFIX = "/api/v1";
 
-const char* ID_INCUBADORA = "INC_001"; 
+const char* ID_INCUBADORA = "INC_002"; 
 
 // Endpoints (Usando o prefixo /api/v1/ e o ID para setpoint)
 String SETPOINT_BASE_URL = String(BASE_URL) + API_PREFIX + "/setpoint/";
@@ -59,7 +59,7 @@ const int BUZZER_PIN = 16;
 
 const int SWITCH_TAMPA = 34;      
 const int SWITCH_MODE = 35;       
-const int BUTTON_STOP = 32;       
+const int SWITCH_STOP = 32;       
 const int BUTTON_MANUAL_HEAT = 19; 
 const int BUTTON_MANUAL_COOL = 18; 
 
@@ -203,7 +203,6 @@ void sendHistory(String mode) {
   http.begin(HISTORICO_ENDPOINT); 
   http.addHeader("Content-Type", "application/json");
 
-  // AUMENTADO: Define um timeout de 10 segundos para requisição
   http.setTimeout(5000); 
 
   int httpCode = http.POST(jsonBody);
@@ -212,7 +211,7 @@ void sendHistory(String mode) {
     Serial.print("Histórico POST Enviado (Status: "); 
     Serial.print(httpCode);
     Serial.println(")");
-    // Leitura da resposta para liberar o buffer HTTP (essencial para evitar travamento)
+    
     http.getString(); 
   } else {
     Serial.print("Erro ao enviar Histórico POST: ");
@@ -239,7 +238,7 @@ void setup() {
   // Entradas em modo PULLUP
   pinMode(SWITCH_TAMPA, INPUT_PULLUP);
   pinMode(SWITCH_MODE, INPUT_PULLUP);
-  pinMode(BUTTON_STOP, INPUT_PULLUP); 
+  pinMode(SWITCH_STOP, INPUT_PULLUP); 
   pinMode(BUTTON_MANUAL_HEAT, INPUT_PULLUP);
   pinMode(BUTTON_MANUAL_COOL, INPUT_PULLUP);
 
@@ -268,71 +267,9 @@ void setup() {
 // --- LOOP PRINCIPAL ---
 void loop() {
   
-  // Lógica de Pulso do Buzzer (Roda em TODOS os ciclos)
-  handleBuzzerPulse();
-
-  // 1. Lógica do Switch LIGA/DESLIGA (Prioridade 0: Parada Imediata)
-  if (digitalRead(BUTTON_STOP) == LOW) { 
-    if (systemIsRunning) {
-      Serial.println("DESLIGAR: Sistema Parado.");
-      sendHistory("STOP");
-      systemIsRunning = false;
-      control_output_power = 0.0;
-      setLeds(false, false, false);
-      stopBuzzer();
-    }
-    return;
-  } else { 
-    if (!systemIsRunning) {
-      Serial.println("LIGA: Reiniciando o ciclo.");
-      systemIsRunning = true;
-      pid.resetIntegral();
-      currentMode = "VERIFICACAO";
-      lastPollingTime = 0; 
-    }
-  }
-
-  // Se o sistema estiver desligado, retorna
-  if (!systemIsRunning) {
-      return;
-  }
-
-  // 3. Verificação de Segurança (Prioridade 1: ALERTA - Tampa Aberta)
-  if (digitalRead(SWITCH_TAMPA) == LOW) { 
-    if (currentMode != "ALERTA") {
-      Serial.println("ALERTA: Tampa Aberta! Buzzer ON.");
-      currentMode = "ALERTA";
-      control_output_power = 0.0; 
-      setLeds(false, false, false);
-      startBuzzer(); // Inicia o pulso do buzzer
-    }
-    
-    return;
-  } else { 
-    if (currentMode == "ALERTA") {
-       Serial.println("ALERTA: Resolvido. Retornando ao Hub.");
-       stopBuzzer(); // Para o pulso do buzzer
-       currentMode = "VERIFICACAO"; 
-       lastPollingTime = 0;
-    }
-  }
-
-  // Modelo de Temperatura 
-  if (millis() - lastControlTime >= CONTROL_LOOP_TIME) {
-    lastControlTime = millis();
-    updateTemperatureModel(control_output_power);
-    
-    Serial.print("T: ");
-    Serial.print(current_temperature, 2);
-    Serial.print("°C | Set: ");
-    Serial.print(setpoint, 2);
-    Serial.print("°C | Pot: ");
-    Serial.println(control_output_power, 2);
-  }
   
-  // 4. Lógica de Conexão e Polling (Hub Central)
-
-  // A. Lógica de Reconexão (Roda em 3s, sempre que o Wi-Fi cair)
+  // Lógica de Conexão e Polling (Hub Central)
+  // Lógica de Reconexão (Roda em 3s, sempre que o Wi-Fi cair)
   if (WiFi.status() != WL_CONNECTED) {
     if (millis() - lastConnectAttempt >= WIFI_RECONNECT_INTERVAL) {
       lastConnectAttempt = millis();
@@ -377,7 +314,70 @@ void loop() {
     }
   }
   
-  // 5. Lógica de Modos (Executa o controle: FALLBACK, MANUAL, AUTOMATICO)
+  // Lógica de Pulso do Buzzer (Roda em TODOS os ciclos)
+  handleBuzzerPulse();
+
+  // Lógica do Switch LIGA/DESLIGA (Prioridade 0: Parada Imediata)
+  if (digitalRead(SWITCH_STOP) == LOW) { 
+    if (systemIsRunning) {
+      Serial.println("DESLIGAR: Sistema Parado.");
+      sendHistory("STOP");
+      systemIsRunning = false;
+      control_output_power = 0.0;
+      setLeds(false, false, false);
+      stopBuzzer();
+    }
+    return;
+  } else { 
+    if (!systemIsRunning) {
+      Serial.println("LIGA: Reiniciando o ciclo.");
+      systemIsRunning = true;
+      pid.resetIntegral();
+      currentMode = "VERIFICACAO";
+      lastPollingTime = 0; 
+    }
+  }
+
+  // Se o sistema estiver desligado, retorna
+  if (!systemIsRunning) {
+      return;
+  }
+
+  // Verificação de Segurança (Prioridade 1: ALERTA - Tampa Aberta)
+  if (digitalRead(SWITCH_TAMPA) == LOW) { 
+    if (currentMode != "ALERTA") {
+      Serial.println("ALERTA: Tampa Aberta! Buzzer ON.");
+      currentMode = "ALERTA";
+      control_output_power = 0.0; 
+      setLeds(false, false, false);
+      startBuzzer(); // Inicia o pulso do buzzer
+    }
+    
+    return;
+  } else { 
+    if (currentMode == "ALERTA") {
+       Serial.println("ALERTA: Resolvido. Retornando ao Hub.");
+       stopBuzzer(); // Para o pulso do buzzer
+       currentMode = "VERIFICACAO"; 
+       lastPollingTime = 0;
+    }
+  }
+
+  // Modelo de Temperatura 
+  if (millis() - lastControlTime >= CONTROL_LOOP_TIME) {
+    lastControlTime = millis();
+    updateTemperatureModel(control_output_power);
+    
+    Serial.print("T: ");
+    Serial.print(current_temperature, 2);
+    Serial.print("°C | Set: ");
+    Serial.print(setpoint, 2);
+    Serial.print("°C | Pot: ");
+    Serial.println(control_output_power, 2);
+  }
+  
+
+  // Lógica de Modos (Executa o controle: FALLBACK, MANUAL, AUTOMATICO)
   
   if (currentMode == "FALLBACK") {
       // do/Rodar PID localmente.
@@ -393,7 +393,7 @@ void loop() {
       }
       
   } else if (currentMode == "VERIFICACAO_BOTOES") {
-      // 5a. Seleção de Modo
+      // Seleção de Modo
       if (digitalRead(SWITCH_MODE) == LOW) { // LOW = MANUAL
         Serial.println("Modo selecionado: MANUAL.");
         currentMode = "MANUAL"; 
@@ -405,7 +405,7 @@ void loop() {
       }
 
   } else if (currentMode == "MANUAL") {
-      // 5b. CONTROLE MANUAL (Sem PID)
+      // CONTROLE MANUAL (Sem PID)
       bool heating = digitalRead(BUTTON_MANUAL_HEAT) == LOW;
       bool cooling = digitalRead(BUTTON_MANUAL_COOL) == LOW;
 
@@ -428,7 +428,7 @@ void loop() {
       }
 
   } else if (currentMode == "AUTOMATICO") {
-      // 5c. CONTROLE AUTOMÁTICO (PID)
+      // CONTROLE AUTOMÁTICO (PID)
       
       control_output_power = pid.compute(setpoint, current_temperature);
       float error_abs = abs(setpoint - current_temperature);

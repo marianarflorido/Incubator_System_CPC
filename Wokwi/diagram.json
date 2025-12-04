@@ -69,8 +69,43 @@
       "left": 57.6,
       "attrs": { "value": "1000" }
     },
-    { "type": "wokwi-slide-switch", "id": "sw2", "top": -302.8, "left": 31.9, "attrs": {} },
-    { "type": "wokwi-slide-switch", "id": "sw3", "top": -302.8, "left": 127.9, "attrs": {} }
+    { "type": "wokwi-slide-switch", "id": "sw2", "top": -302.8, "left": 22.3, "attrs": {} },
+    { "type": "wokwi-slide-switch", "id": "sw3", "top": -302.8, "left": 137.5, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text1",
+      "top": -336,
+      "left": 124.8,
+      "attrs": { "text": "TAMPA" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text2",
+      "top": -336,
+      "left": 0,
+      "attrs": { "text": "ON/OFF\n" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text3",
+      "top": -336,
+      "left": 67.2,
+      "attrs": { "text": "MODO\n" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text4",
+      "top": -326.4,
+      "left": 393.6,
+      "attrs": { "text": "AQUECER\n" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text5",
+      "top": -192,
+      "left": 403.2,
+      "attrs": { "text": "RESFRIAR\n" }
+    }
   ],
   "connections": [
     [ "esp:TX", "$serialMonitor:RX", "", [] ],
@@ -89,7 +124,7 @@
     [ "esp:GND.1", "led1:C", "black", [ "h-38.25", "v48", "h-192" ] ],
     [ "esp:GND.1", "sw3:3", "black", [ "h-38.25", "v-134.4", "h-28.8" ] ],
     [ "esp:GND.1", "sw1:3", "black", [ "h-38.25", "v-134.4", "h-67.2" ] ],
-    [ "esp:GND.1", "sw2:3", "black", [ "h-38.25", "v-134.4", "h-124.8", "v-28.8" ] ],
+    [ "esp:GND.1", "sw2:3", "black", [ "h-38.25", "v-134.4", "h-134.4", "v-28.8" ] ],
     [ "esp:5V", "sw2:1", "red", [ "h-19.05", "v-163.2", "h-153.6" ] ],
     [ "esp:5V", "sw1:1", "red", [ "h-19.05", "v-163.2", "h-115.2" ] ],
     [ "esp:5V", "sw3:1", "red", [ "h-19.05", "v-163.2", "h-67.2" ] ],
