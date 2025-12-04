@@ -269,7 +269,7 @@ void loop() {
   
   
   // Lógica de Conexão e Polling (Hub Central)
-  // Lógica de Reconexão (Roda em 3s, sempre que o Wi-Fi cair)
+  // Lógica de Reconexão
   if (WiFi.status() != WL_CONNECTED) {
     if (millis() - lastConnectAttempt >= WIFI_RECONNECT_INTERVAL) {
       lastConnectAttempt = millis();
