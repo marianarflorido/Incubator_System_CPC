@@ -72,7 +72,14 @@ No `incubadora_pid.ino`, configure o `BASE_URL` para o seu domínio ativo e o no
 
 ### 3. Projeto do circuito
 
-Projeto: https://wokwi.com/projects/448975964990308353
+[Incubadora 1](https://wokwi.com/projects/448975964990308353)
+[Incubadora 2](https://wokwi.com/projects/449191392240589825)
+
+### 3. PythonAnywhere 
+
+[Dashboard](https://marianarobaina.pythonanywhere.com/)
+
+
 
 
 
